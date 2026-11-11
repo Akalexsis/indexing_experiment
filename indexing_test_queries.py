@@ -9,9 +9,12 @@ db = sqlite3.connect("voter_turnout.db")
 curr = db.cursor()
 
 log = logging.getLogger("query_indexing_log")
-query_log_handler = logging.FileHandler("query_indexing_log.log")
+logging.basicConfig(
+                    filename="query_indexing.log", 
+                    level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s: %(message)s'
+                )
 
-log.addHandler(query_log_handler)
 # ==================================================================
 # TEST QUERIES
 # ==================================================================
@@ -57,9 +60,8 @@ def execute_query(query_name, applied_index, query):
     log.info("=== BEGINNING %s EXECUTION TEST WITH %s INDEX STRATEGY ===== ", query_name, applied_index)
 
     # Execute given query 5 times, log output for each test
-    for test_id in range(1,6):
-
-        try:
+    try:
+        for test_id in range(1,6):
             log.info("=== BEGINNING TEST: %s ===== ", test_id)
 
             start = time.perf_counter() # Start timer
@@ -72,8 +74,8 @@ def execute_query(query_name, applied_index, query):
             log.info("TEST %s EXECUTION TIME: %s", test_id, end - start)
             log.info("=== END TEST %s ===== ", test_id)
 
-        except:
-            log.error("=== ERROR: FAILED TO EXECUTE TEST %s FOR QUERY %s ===== ", test_id, query_name)
+    except:
+        log.error("=== ERROR: FAILED TO EXECUTE TEST %s FOR QUERY %s ===== ", test_id, query_name)
 
 # ==================================================================
 # QUERY EXECUTION SPACE - RUN AND TIME QUERY EXECUTIONS
